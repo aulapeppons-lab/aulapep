@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Els Secrets de l'Ordinador 🖥️✨ | Escàner Hologràfic</title>
+	
+	<!-- Fonts de Google per a un aspecte tecnològic i llegible -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+	<style>
+		:root {
+			--bg-dark: #090a0f;
+			--bg-panel: rgba(18, 20, 32, 0.75);
+			--accent-cyan: #00f0ff;
+			--accent-pink: #d946ef;
+			--accent-green: #10b981;
+			--accent-gold: #facc15;
+			--text-light: #f3f4f6;
+			--text-muted: #9ca3af;
+			--border-color: rgba(0, 240, 255, 0.15);
+			
+			/* Badges colors */
+			--clr-base: #f97316;
+			--clr-precios: #eab308;
+			--clr-rara: #a855f7;
+			--clr-critic: #ef4444;
+			--clr-tecnologic: #14b8a6;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+			background-color: var(--bg-dark);
+			background-image: 
+				radial-gradient(at 50% 0%, rgba(26, 28, 48, 0.5) 0px, transparent 50%),
+				linear-gradient(rgba(18, 18, 24, 0.55) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(18, 18, 24, 0.55) 1px, transparent 1px);
+			background-size: 100% 100%, 30px 30px, 30px 30px;
+			color: var(--text-light);
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 20px;
+			overflow-x: hidden;
+		}
+
+		/* Estils de la barra de desplaçament */
+		::-webkit-scrollbar {
+			width: 8px;
+		}
+		::-webkit-scrollbar-track {
+			background: rgba(9, 10, 15, 0.5);
+		}
+		::-webkit-scrollbar-thumb {
+			background: var(--accent-cyan);
+			border-radius: 4px;
+		}
+
+		header {
+			width: 100%;
+			max-width: 1200px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 20px;
+			border-bottom: 1px solid var(--border-color);
+			padding-bottom: 15px;
+			position: relative;
+		}
+
+		.header-title-container h1 {
+			font-family: 'Orbitron', sans-serif;
+			font-size: 1.8rem;
+			font-weight: 900;
+			letter-spacing: 1.5px;
+			background: linear-gradient(to right, #ffffff, var(--accent-cyan));
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			text-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.header-title-container p {
+			color: var(--text-muted);
+			font-size: 0.95rem;
+			margin-top: 4px;
+		}
+
+		.top-controls {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+		}
+
+		/* Botó de silenciar */
+		.audio-toggle {
+			background: rgba(0, 240, 255, 0.1);
+			border: 1px solid var(--accent-cyan);
+			color: var(--accent-cyan);
+			border-radius: 50%;
+			width: 44px;
+			height: 44px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+		}
+
+		.audio-toggle:hover {
+			background: var(--accent-cyan);
+			color: var(--bg-dark);
+			box-shadow: 0 0 15px var(--accent-cyan);
+			transform: scale(1.05);
+		}
+
+		/* Marcador de Nivell (XP) */
+		.xp-bar-container {
+			background: rgba(255, 255, 255, 0.05);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			padding: 6px 15px;
+			border-radius: 20px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.xp-label {
+			font-family: 'Orbitron', sans-serif;
+			font-size: 0.75rem;
+			font-weight: 700;
+			color: var(--accent-gold);
+		}
+
+		.xp-progress-bg {
+			width: 100px;
+			height: 8px;
+			background: rgba(255, 255, 255, 0.1);
+			border-radius: 4px;
+			overflow: hidden;
+		}
+
+		.xp-progress-fill {
+			height: 100%;
+			background: linear-gradient(90deg, var(--accent-gold), var(--accent-green));
+			width: 0%;
+			transition: width 0.5s ease-out;
+		}
+
+		.main-container {
+			display: flex;
+			gap: 24px;
+			width: 100%;
+			max-width: 1200px;
+			flex-wrap: wrap;
+			margin-bottom: 24px;
+		}
+
+		/* Columna esquerra: Canvas escàner */
+		.scanner-column {
+			flex: 1.2;
+			min-width: 320px;
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+		}
+
+		.canvas-wrapper {
+			position: relative;
+			background: var(--bg-panel);
+			border: 2px solid var(--border-color);
+			border-radius: 16px;
+			padding: 12px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 240, 255, 0.05);
+			backdrop-filter: blur(12px);
+			overflow: hidden;
+		}
+
+		/* Detalls decoratius de cantonada tipus HUD */
+		.canvas-wrapper::before, .canvas-wrapper::after,
+		.hologram-panel::before, .hologram-panel::after {
+			content: '';
+			position: absolute;
+			width: 15px;
+			height: 15px;
+			border-color: var(--accent-cyan);
+			border-style: solid;
+			pointer-events: none;
+			z-index: 5;
+		}
+		
+		/* Cantonades d'escàner */
+		.canvas-wrapper::before { top: 10px; left: 10px; border-width: 2px 0 0 2px; }
+		.canvas-wrapper::after { bottom: 10px; right: 10px; border-width: 0 2px 2px 0; }
+
+		canvas {
+			display: block;
+			width: 100%;
+			height: auto;
+			background-color: #111420;
+			border-radius: 10px;
+			cursor: crosshair;
+		}
+
+		.scanner-status-bar {
+			background: rgba(0, 240, 255, 0.05);
+			border: 1px solid rgba(0, 240, 255, 0.15);
+			padding: 10px 15px;
+			border-radius: 8px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-family: 'Orbitron', sans-serif;
+			font-size: 0.8rem;
+		}
+
+		.status-indicator {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.status-dot {
+			width: 8px;
+			height: 8px;
+			background-color: var(--accent-green);
+			border-radius: 50%;
+			box-shadow: 0 0 8px var(--accent-green);
+			animation: pulse 1.5s infinite;
+		}
+
+		.status-dot.scanning {
+			background-color: var(--accent-pink);
+			box-shadow: 0 0 8px var(--accent-pink);
+		}
+
+		/* Columna dreta: Panell d'informació / Joc */
+		.hologram-panel {
+			flex: 1;
+			min-width: 350px;
+			background: var(--bg-panel);
+			border: 2px solid var(--border-color);
+			border-radius: 16px;
+			padding: 20px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+			backdrop-filter: blur(12px);
+			position: relative;
+			display: flex;
+			flex-direction: column;
+		}
+
+		/* Cantonades panel */
+		.hologram-panel::before { top: 10px; right: 10px; border-width: 2px 2px 0 0; }
+		.hologram-panel::after { bottom: 10px; left: 10px; border-width: 0 0 2px 2px; }
+
+		/* Pestanyes de mode (Escàner vs Joc) */
+		.panel-tabs {
+			display: flex;
+			gap: 10px;
+			margin-bottom: 20px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			padding-bottom: 10px;
+		}
+
+		.tab-button {
+			flex: 1;
+			background: rgba(255, 255, 255, 0.02);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			color: var(--text-muted);
+			padding: 10px;
+			border-radius: 8px;
+			font-family: 'Orbitron', sans-serif;
+			font-size: 0.8rem;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+		}
+
+		.tab-button.active {
+			background: rgba(0, 240, 255, 0.1);
+			border-color: var(--accent-cyan);
+			color: var(--accent-cyan);
+			box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
+		}
+
+		.tab-button:hover:not(.active) {
+			background: rgba(255, 255, 255, 0.05);
+			color: var(--text-light);
+			border-color: rgba(255, 255, 255, 0.3);
+		}
+
+		/* Contingut dinàmic */
+		.panel-content {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+		}
+
+		/* ESTATS DEL DETALL DEL MINERAL */
+		.welcome-screen {
+			text-align: center;
+			padding: 30px 10px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			flex: 1;
+		}
+
+		.welcome-icon {
+			font-size: 3.5rem;
+			margin-bottom: 15px;
+			animation: float 3s ease-in-out infinite;
+		}
+
+		.welcome-screen h2 {
+			font-family: 'Orbitron', sans-serif;
+			font-size: 1.4rem;
+			margin-bottom: 12px;
+			color: var(--accent-cyan);
+		}
+
+		.welcome-screen p {
+			color: var(--text-muted);
+			font-size: 0.95rem;
+			line-height: 1.6;
+			max-width: 280px;
+			margin-bottom: 20px;
+		}
+
+		.btn-start-scan {
+			background: linear-gradient(135deg, var(--accent-cyan), #00a8ff);
+			color: var(--bg-dark);
+			border: none;
+			padding: 12px 24px;
+			border-radius: 25px;
+			font-weight: 800;
+			font-size: 0.9rem;
+			text-transform: uppercase;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			box-shadow: 0 5px 15px rgba(0, 240, 255, 0.3);
+		}
+
+		.btn-start-scan:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 25px rgba(0, 240, 255, 0.5);
+		}
+
+		.component-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+			border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+			padding-bottom: 10px;
+		}
+
+		.component-name {
+			font-family: 'Orbitron', sans-serif;
+			font-size: 1.25rem;
+			color: #ffffff;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.mineral-card {
+			background: rgba(255, 255, 255, 0.03);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			border-radius: 12px;
+			padding: 18px;
+			margin-bottom: 15px;
+			transition: all 0.3s ease;
+		}
+
+		.mineral-card-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 12px;
+		}
+
+		.mineral-badge {
+			display: inline-block;
+			padding: 4px 10px;
+			border-radius: 20px;
+			font-weight: 800;
+			font-size: 0.7rem;
+			letter-spacing: 0.5px;
+			text-transform: uppercase;
+			color: #000000;
+		}
+
+		.badge-base { background-color: var(--clr-base); color: white; }
+		.badge-precios { background-color: var(--clr-precios); }
+		.badge-rara { background-color: var(--clr-rara); color: white; }
+		.badge-critic { background-color: var(--clr-critic); color: white; }
+		.badge-tecnologic { background-color: var(--clr-tecnologic); color: white; }
+
+		.mineral-title {
+			font-family: 'Orbitron', sans-serif;
+			font-size: 1.4rem;
+			font-weight: 700;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.element-symbol {
+			font-size: 1rem;
+			font-weight: 800;
+			padding: 3px 8px;
+			border-radius: 6px;
+			color: #ffffff;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			background: rgba(255, 255, 255, 0.08);
+		}
+
+		.section-title {
+			color: var(--accent-cyan);
+			font-family: 'Orbitron', sans-serif;
+			font-size: 0.75rem;
+			font-weight: 700;
+			letter-spacing: 1px;
+			margin-top: 15px;
+			margin-bottom: 5px;
+			text-transform: uppercase;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.section-desc {
+			font-size: 0.88rem;
+			line-height: 1.5;
+			color: var(--text-light);
+		}
+
+		.fun-fact-container {
+			background: rgba(250, 204, 21, 0.05);
+			border: 1px solid rgba(250, 204, 21, 0.15);
+			border-left: 4px solid var(--accent-gold);
+			padding: 10px 12px;
+			border-radius: 6px;
+			margin-top: 12px;
+			display: flex;
+			gap: 8px;
+			align-items: flex-start;
+		}
+
+		.fun-fact-icon {
+			font-size: 1.1rem;
+			line-height: 1;
+		}
+
+		.fun-fact-text {
+			font-size: 0.8rem;
+			line-height: 1.4;
+			color: #fffae6;
+			font-style: italic;
+		}
+
+		/* RPG Mineral Stats */
+		.stats-container {
+			margin-top: 12px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.stat-row {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+
+		.stat-info {
+			display: flex;
+			justify-content: space-between;
+			font-size: 0.72rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			color: var(--text-muted);
+		}
+
+		.stat-bar-bg {
+			width: 100%;
+			height: 6px;
+			background: rgba(255, 255, 255, 0.06);
+			border-radius: 3px;
+			overflow: hidden;
+		}
+
+		.stat-bar-fill {
+			height: 100%;
+			border-radius: 3px;
+			width: 0%;
+			transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		/* ESTATS DEL QÜESTIONARI */
+		.quiz-container {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			justify-content: space-between;
+			flex: 1;
+		}
+
+		.quiz-score-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 12px;
+			font-family: 'Orbitron', sans-serif;
+			font-size: 0.8rem;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+			padding-bottom: 10px;
+		}
+
+		.quiz-score {
+			color: var(--accent-gold);
+			font-weight: 800;
+		}
+
+		.quiz-question-box {
+			background: rgba(255, 255, 255, 0.02);
+			border: 1px dashed rgba(255, 255, 255, 0.15);
+			padding: 15px;
+			border-radius: 8px;
+			font-size: 0.92rem;
+			line-height: 1.5;
+			margin-bottom: 15px;
+			font-weight: 600;
+			min-height: 70px;
+		}
+
+		.quiz-choices {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.choice-btn {
+			background: rgba(255, 255, 255, 0.03);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			padding: 10px 15px;
+			border-radius: 8px;
+			color: var(--text-light);
+			font-family: inherit;
+			font-size: 0.85rem;
+			text-align: left;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.choice-btn:hover:not(:disabled) {
+			background: rgba(0, 240, 255, 0.08);
+			border-color: var(--accent-cyan);
+			transform: translateX(4px);
+		}
+
+		.choice-btn.correct {
+			background: rgba(16, 185, 129, 0.2);
+			border-color: var(--accent-green);
+			color: #a7f3d0;
+		}
+
+		.choice-btn.incorrect {
+			background: rgba(239, 68, 68, 0.2);
+			border-color: #ef4444;
+			color: #fca5a5;
+		}
+
+		.choice-btn:disabled {
+			cursor: not-allowed;
+			opacity: 0.7;
+		}
+
+		.choice-bullet {
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			background: rgba(255, 255, 255, 0.08);
+			border-radius: 50%;
+			text-align: center;
+			line-height: 20px;
+			font-size: 0.75rem;
+			font-weight: bold;
+			color: var(--text-muted);
+		}
+
+		.quiz-feedback {
+			margin-top: 15px;
+			padding: 12px;
+			border-radius: 8px;
+			text-align: center;
+			font-size: 0.82rem;
+			font-weight: 700;
+			line-height: 1.4;
+			min-height: 50px;
+			opacity: 0;
+			transition: opacity 0.3s ease;
+		}
+
+		.quiz-feedback.show {
+			opacity: 1;
+		}
+
+		.btn-next-question {
+			background: var(--accent-cyan);
+			color: var(--bg-dark);
+			border: none;
+			padding: 10px 20px;
+			border-radius: 20px;
+			font-weight: 700;
+			font-size: 0.8rem;
+			cursor: pointer;
+			display: none;
+			margin: 10px auto 0 auto;
+			text-transform: uppercase;
+			transition: all 0.2s ease;
+		}
+
+		.btn-next-question:hover {
+			box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+		}
+
+		.quiz-results-screen {
+			text-align: center;
+			padding: 20px 10px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			flex: 1;
+		}
+
+		.rank-badge {
+			background: rgba(250, 204, 21, 0.1);
+			border: 2px solid var(--accent-gold);
+			color: var(--accent-gold);
+			font-family: 'Orbitron', sans-serif;
+			font-size: 1rem;
+			font-weight: 900;
+			padding: 12px 24px;
+			border-radius: 8px;
+			margin: 15px 0;
+			box-shadow: 0 0 15px rgba(250, 204, 21, 0.15);
+			animation: pulse-gold 2s infinite;
+		}
+
+		/* Taula dels Metalls Ocults (Part inferior) */
+		.periodic-row-container {
+			width: 100%;
+			max-width: 1200px;
+			margin-top: 10px;
+			background: var(--bg-panel);
+			border: 2px solid var(--border-color);
+			border-radius: 16px;
+			padding: 18px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+			backdrop-filter: blur(12px);
+		}
+
+		.periodic-row-title {
+			font-family: 'Orbitron', sans-serif;
+			font-size: 0.85rem;
+			font-weight: 700;
+			letter-spacing: 1.5px;
+			color: var(--accent-cyan);
+			margin-bottom: 12px;
+			text-align: center;
+			text-transform: uppercase;
+		}
+
+		.periodic-grid {
+			display: grid;
+			grid-template-columns: repeat(8, 1fr);
+			gap: 12px;
+		}
+
+		.periodic-card {
+			background: rgba(255, 255, 255, 0.03);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			border-radius: 10px;
+			padding: 10px 5px;
+			text-align: center;
+			cursor: pointer;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 4px;
+			position: relative;
+		}
+
+		.periodic-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 3px;
+			border-radius: 3px 3px 0 0;
+			opacity: 0.7;
+		}
+
+		/* Custom border tops per tipus de mineral */
+		.card-coure::before { background-color: var(--clr-base); }
+		.card-or::before { background-color: var(--clr-precios); }
+		.card-neodimi::before { background-color: var(--clr-rara); }
+		.card-tantal::before { background-color: var(--clr-critic); }
+		.card-indi::before { background-color: var(--clr-tecnologic); }
+		.card-plata::before { background-color: var(--clr-precios); }
+		.card-europi::before { background-color: var(--clr-rara); }
+		.card-itri::before { background-color: var(--clr-rara); }
+
+		.periodic-symbol {
+			font-family: 'Orbitron', sans-serif;
+			font-size: 1.3rem;
+			font-weight: 900;
+			color: #ffffff;
+			text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+		}
+
+		.periodic-name {
+			font-size: 0.72rem;
+			color: var(--text-muted);
+			font-weight: 600;
+		}
+
+		.periodic-card:hover {
+			transform: translateY(-4px);
+			background: rgba(255, 255, 255, 0.08);
+			border-color: rgba(255, 255, 255, 0.3);
+			box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+		}
+
+		.periodic-card.active {
+			background: rgba(0, 240, 255, 0.08);
+			border-color: var(--accent-cyan);
+			box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
+			transform: scale(1.05);
+		}
+
+		.instruction-tooltip {
+			text-align: center;
+			font-size: 0.8rem;
+			color: var(--text-muted);
+			margin-top: 10px;
+			font-style: italic;
+		}
+
+		footer {
+			margin-top: 30px;
+			color: rgba(255, 255, 255, 0.25);
+			font-size: 0.75rem;
+			text-align: center;
+			font-family: 'Orbitron', sans-serif;
+			width: 100%;
+			max-width: 1200px;
+			border-top: 1px solid rgba(255, 255, 255, 0.05);
+			padding-top: 15px;
+		}
+
+		/* Animations */
+		@keyframes pulse {
+			0%, 100% { opacity: 1; transform: scale(1); }
+			50% { opacity: 0.4; transform: scale(1.1); }
+		}
+
+		@keyframes pulse-gold {
+			0%, 100% { box-shadow: 0 0 10px rgba(250, 204, 21, 0.2); }
+			50% { box-shadow: 0 0 25px rgba(250, 204, 21, 0.5); }
+		}
+
+		@keyframes float {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-8px); }
+		}
+
+		/* Adaptació a pantalles xicotetes */
+		@media (max-width: 900px) {
+			.main-container {
+				flex-direction: column;
+			}
+			.periodic-grid {
+				grid-template-columns: repeat(4, 1fr);
+			}
+			.header-title-container h1 {
+				font-size: 1.5rem;
+			}
+		}
+
+		@media (max-width: 500px) {
+			.periodic-grid {
+				grid-template-columns: repeat(2, 1fr);
+			}
+			.top-controls {
+				flex-direction: column;
+				align-items: flex-end;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<header>
+		<div class="header-title-container">
+			<h1><span style="font-size: 1.5rem;">🖥️</span> ESCÀNER DE MINERALS HOLOGRÀFIC</h1>
+			<p>Analitzador de components químics i geològics integrats en els ordinadors</p>
+		</div>
+		
+		<div class="top-controls">
+			<!-- Progrés de Nivell XP -->
+			<div class="xp-bar-container" title="Puntuació del joc didàctic">
+				<span class="xp-label" id="rankLabel">Aprenent 🔍</span>
+				<div class="xp-progress-bg">
+					<div class="xp-progress-fill" id="xpBar"></div>
+				</div>
+				<span class="xp-label" style="color:#fff;" id="xpText">0/8</span>
+			</div>
+			
+			<!-- Silenciador -->
+			<button class="audio-toggle" id="btnAudio" title="Activar/Silenciar efectes de so">
+				<!-- Icona d'àudio actiu -->
+				<svg id="svgSoundOn" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+				<!-- Icona d'àudio silenciós (ocult inicialment) -->
+				<svg id="svgSoundMuted" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+			</button>
+		</div>
+	</header>
+
+	<div class="main-container">
+		
+		<!-- Columna Esquerra: Escàner visual -->
+		<div class="scanner-column">
+			<div class="canvas-wrapper">
+				<canvas id="computerCanvas" width="600" height="500"></canvas>
+			</div>
+			
+			<div class="scanner-status-bar">
+				<div class="status-indicator">
+					<div class="status-dot" id="statusDot"></div>
+					<span id="statusText">SISTEMA A PUNT</span>
+				</div>
+				<div style="color: var(--text-muted);" id="hudCoords">X: 000 | Y: 000</div>
+			</div>
+		</div>
+
+		<!-- Columna Dreta: Panell Hologràfic -->
+		<div class="hologram-panel" id="hologramPanel">
+			
+			<!-- Pestanyes -->
+			<div class="panel-tabs">
+				<button class="tab-button active" id="tabScanner">
+					<span style="font-size: 1.1rem;">🔎</span> MODE ESCÀNER
+				</button>
+				<button class="tab-button" id="tabQuiz">
+					<span style="font-size: 1.1rem;">🏆</span> JOC DE PREGUNTES
+				</button>
+			</div>
+
+			<!-- Contingut del Panell -->
+			<div class="panel-content" id="panelContent">
+				
+				<!-- Secció d'Escàner de Minerals (actiu per defecte) -->
+				<div id="scannerView" style="display: flex; flex-direction: column; height: 100%;">
+					<div class="welcome-screen" id="scannerWelcome">
+						<div class="welcome-icon">🖥️</div>
+						<h2>Laboratori d'Escàner</h2>
+						<p>Passa el ratolí pel panell de l'ordinador i fes clic en qualsevol component per extreure'n els minerals!</p>
+						<button class="btn-start-scan" id="btnAutoScan">SCANNER D'ELEMENTS</button>
+					</div>
+
+					<div id="scannerDetails" style="display: none;">
+						<div class="component-header">
+							<div class="component-name">
+								<span>🎯</span> <span id="compLabel">Component</span>
+							</div>
+							<span style="font-size: 0.72rem; font-family:'Orbitron'; color: var(--accent-cyan);" id="compScanStatus">ESCANEJAT CORECTAMENT</span>
+						</div>
+						
+						<!-- Targetes de mineral que s'inseriran de forma dinàmica -->
+						<div id="mineralsContainer"></div>
+					</div>
+				</div>
+
+				<!-- Secció de Qüestionari (ocult per defecte) -->
+				<div id="quizView" style="display: none; flex-direction: column; height: 100%;">
+					<div class="quiz-container">
+						<div>
+							<div class="quiz-score-header">
+								<div>PREGUNTA: <span id="questionNum">1/8</span></div>
+								<div>ENCERTS: <span class="quiz-score" id="quizScoreText">0</span></div>
+							</div>
+							
+							<div class="quiz-question-box" id="quizQuestion">
+								Pregunta didàctica...
+							</div>
+							
+							<div class="quiz-choices" id="quizChoices">
+								<!-- Botons d'opcions s'afegiran dinàmicament -->
+							</div>
+						</div>
+						
+						<div>
+							<div class="quiz-feedback" id="quizFeedback"></div>
+							<button class="btn-next-question" id="btnNextQuestion">Següent Pregunta</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Taula d'elements a la base -->
+	<div class="periodic-row-container">
+		<div class="periodic-row-title">🔬 FES CLIC EN UN ELEMENT PER A HIGHLIGHT (VEURE ON S'AMAGA A L'ORDINADOR)</div>
+		
+		<div class="periodic-grid">
+			<!-- Elements cards -->
+			<div class="periodic-card card-coure" data-mkey="coure">
+				<span class="periodic-symbol" style="color: var(--clr-base);">Cu</span>
+				<span class="periodic-name">Coure</span>
+			</div>
+			<div class="periodic-card card-or" data-mkey="or">
+				<span class="periodic-symbol" style="color: var(--clr-precios);">Au</span>
+				<span class="periodic-name">Or</span>
+			</div>
+			<div class="periodic-card card-neodimi" data-mkey="neodimi">
+				<span class="periodic-symbol" style="color: var(--clr-rara);">Nd</span>
+				<span class="periodic-name">Neodimi</span>
+			</div>
+			<div class="periodic-card card-tantal" data-mkey="tantal">
+				<span class="periodic-symbol" style="color: var(--clr-critic);">Ta</span>
+				<span class="periodic-name">Tàntal</span>
+			</div>
+			<div class="periodic-card card-indi" data-mkey="indi">
+				<span class="periodic-symbol" style="color: var(--clr-tecnologic);">In</span>
+				<span class="periodic-name">Indi</span>
+			</div>
+			<div class="periodic-card card-plata" data-mkey="plata">
+				<span class="periodic-symbol" style="color: #cbd5e1;">Ag</span>
+				<span class="periodic-name">Plata</span>
+			</div>
+			<div class="periodic-card card-europi" data-mkey="europi">
+				<span class="periodic-symbol" style="color: var(--clr-rara);">Eu</span>
+				<span class="periodic-name">Europi</span>
+			</div>
+			<div class="periodic-card card-itri" data-mkey="itri">
+				<span class="periodic-symbol" style="color: #60a5fa;">Y</span>
+				<span class="periodic-name">Itri</span>
+			</div>
+		</div>
+		
+		<div class="instruction-tooltip">Si cliques sobre un element, brillarà l'ordinador a sobre!</div>
+	</div>
+
+	<footer>
+		&copy; 2026 LABORATORI ESCOLA SERGI - EXPLORACIÓ DIDÀCTICA DE CIÈNCIA I TECNOLOGIA
+	</footer>
+
+	<script>
+		// ==========================================
+		// 1. SINTETITZADOR DE SO (WEB AUDIO API)
+		// ==========================================
+		class SoundEffects {
+			constructor() {
+				this.ctx = null;
+				this.muted = false;
+			}
+
+			init() {
+				if (!this.ctx) {
+					this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+				}
+			}
+
+			playTone(freq, type, duration, delay = 0, sweepTo = null) {
+				if (this.muted) return;
+				this.init();
+				
+				if (this.ctx.state === 'suspended') {
+					this.ctx.resume();
+				}
+
+				const osc = this.ctx.createOscillator();
+				const gain = this.ctx.createGain();
+
+				osc.type = type;
+				osc.frequency.setValueAtTime(freq, this.ctx.currentTime + delay);
+				
+				if (sweepTo) {
+					osc.frequency.exponentialRampToValueAtTime(sweepTo, this.ctx.currentTime + delay + duration);
+				}
+
+				gain.gain.setValueAtTime(0.08, this.ctx.currentTime + delay);
+				gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + delay + duration);
+
+				osc.connect(gain);
+				gain.connect(this.ctx.destination);
+
+				osc.start(this.ctx.currentTime + delay);
+				osc.stop(this.ctx.currentTime + delay + duration);
+			}
+
+			playHover() {
+				// Petit "clic" molt bonic d'interfície
+				this.playTone(1800, 'sine', 0.03);
+			}
+
+			playScan() {
+				// Efecte d'escaneig que fa un sweep
+				this.playTone(150, 'triangle', 0.35, 0, 950);
+			}
+
+			playCorrect() {
+				// Acord alegre d'acompanyament quan encerten
+				const t = 0.08;
+				this.playTone(523.25, 'sine', 0.1, 0); // C5
+				this.playTone(659.25, 'sine', 0.1, t); // E5
+				this.playTone(783.99, 'sine', 0.15, t * 2); // G5
+				this.playTone(1046.50, 'sine', 0.25, t * 3); // C6
+			}
+
+			playIncorrect() {
+				// So d'error de tipus retro retro
+				this.playTone(220, 'triangle', 0.22, 0, 110);
+			}
+
+			playPowerUp() {
+				// Sweep d'inici
+				this.playTone(90, 'sawtooth', 0.75, 0, 750);
+			}
+		}
+
+		const sounds = new SoundEffects();
+
+		// Control de Silenci
+		const btnAudio = document.getElementById('btnAudio');
+		const svgSoundOn = document.getElementById('svgSoundOn');
+		const svgSoundMuted = document.getElementById('svgSoundMuted');
+
+		btnAudio.addEventListener('click', () => {
+			sounds.muted = !sounds.muted;
+			if (sounds.muted) {
+				svgSoundOn.style.display = 'none';
+				svgSoundMuted.style.display = 'block';
+			} else {
+				svgSoundOn.style.display = 'block';
+				svgSoundMuted.style.display = 'none';
+				sounds.playHover();
+			}
+		});
+
+		// ==========================================
+		// 2. DADES DELS MINERALS (Valencià / Catalan)
+		// ==========================================
+		const mineralsData = {
+			coure: {
+				nom: "Coure",
+				simbol: "Cu",
+				tipus: "METALL BASE / CONDUCTOR",
+				badgeClass: "badge-base",
+				onEsTroba: "Es troba a les pistes de la placa base, cables de connexió, bobines d'alimentació i blocs de dissipació tèrmica de la CPU.",
+				funcio: "Actua com el sistema nerviós digital de l'ordinador. Conduïx l'electricitat i la calor amb una eficiència extraordinària, connectant cada component.",
+				curiositat: "El coure és un metall que es pot reciclar al 100%! Gairebé tot el coure utilitzat al llarg de la història segueix en ús.",
+				stats: { conduct: 96, raresa: 22, resistencia: 45 },
+				clr: 'var(--clr-base)'
+			},
+			or: {
+				nom: "Or",
+				simbol: "Au",
+				tipus: "METALL PRECIÓS",
+				badgeClass: "badge-precios",
+				onEsTroba: "Es localitza principalment en els pins de connexió del processador (CPU), els sòcols dels mòduls de memòria RAM i els contactes dels connectors PCIe.",
+				funcio: "Garantix connexions elèctriques perfectes i d'alta velocitat. Com que és un metall que no s'oxida ni es corromp, assegura que l'ordinador funcione sense fallades durant molts anys.",
+				curiositat: "És increïblement mal·leable: amb un sol gram d'or pur es podria estirar un fil que mesuraria dos quilòmetres de llarg!",
+				stats: { conduct: 88, raresa: 97, resistencia: 100 },
+				clr: 'var(--clr-precios)'
+			},
+			neodimi: {
+				nom: "Neodimi",
+				simbol: "Nd",
+				tipus: "TERRA RARA",
+				badgeClass: "badge-rara",
+				onEsTroba: "Està present en els imans dels motors dels discos durs mecànics (HDD), així com en els altaveus i els micròfons integrats dels ordinadors portàtils.",
+				funcio: "Permet crear els imants permanents més potents de la Terra. Sense ells, els braços mecànics que lligen les dades en els discos durs no podrien moure's a la velocitat necessària.",
+				curiositat: "Un imant de neodimi de la mida d'una moneda és tan potent que és capaç d'aixecar un objecte de més de 10 quilos!",
+				stats: { conduct: 28, raresa: 75, resistencia: 38 },
+				clr: 'var(--clr-rara)'
+			},
+			tantal: {
+				nom: "Tàntal",
+				simbol: "Ta",
+				tipus: "METALL ESCÀS / CRÍTIC",
+				badgeClass: "badge-critic",
+				onEsTroba: "Es troba en els condensadors de gota o de muntatge superficial (SMD) de mida reduïda que poblen les plaques de portàtils i targetes gràfiques.",
+				funcio: "Emmagatzema càrrega elèctrica de forma ultraestable en espais microscòpics. És vital per a evitar pics de tensió i protegir els xips més delicats.",
+				curiositat: "El tàntal suporta un calor extrem: el seu punt de fusió és de 3.017 ºC, gairebé la meitat de la temperatura del Sol!",
+				stats: { conduct: 58, raresa: 86, resistencia: 82 },
+				clr: 'var(--clr-critic)'
+			},
+			indi: {
+				nom: "Indi",
+				simbol: "In",
+				tipus: "METALL TECNOLÒGIC",
+				badgeClass: "badge-tecnologic",
+				onEsTroba: "Forma part de les pantalles de cristall líquid (LCD), pantalles OLED i de les làmines tàctils dels portàtils moderns.",
+				funcio: "Combinat com a òxid d'indi i estany (ITO), crea una pel·lícula conductora que és 100% transparent. Permet aplicar camps elèctrics als píxels sense bloquejar la llum de la pantalla.",
+				curiositat: "És tan tou que el pots doblegar i ratllar directament amb les ungles, i en fer-ho produeix un soroll conegut com el 'crit de l'indi'.",
+				stats: { conduct: 68, raresa: 80, resistencia: 65 },
+				clr: 'var(--clr-tecnologic)'
+			},
+			plata: {
+				nom: "Plata",
+				simbol: "Ag",
+				tipus: "METALL PRECIÓS",
+				badgeClass: "badge-precios",
+				onEsTroba: "S'utilitza en la composició de les pastes tèrmiques d'alta gamma i en les soldadures de precisió dels circuits de baix consum.",
+				funcio: "És l'element amb major conductivitat tèrmica i elèctrica de la taula periòdica. Transferix la calor acumulada en el cor del processador cap al refrigerador de manera immediata.",
+				curiositat: "És la millor reflectora de la llum. De fet, la plata s'utilitza a la part de darrere de gairebé tots els miralls normals que tens a casa.",
+				stats: { conduct: 100, raresa: 85, resistencia: 85 },
+				clr: '#cbd5e1'
+			},
+			europi: {
+				nom: "Europi",
+				simbol: "Eu",
+				tipus: "TERRA RARA",
+				badgeClass: "badge-rara",
+				onEsTroba: "Es troba dopat en quantitats microscòpiques en els fòsfors que componen els panells de visualització LED i OLED.",
+				funcio: "Té propietats luminescents uniques. Quan rep l'estímul dels electrons, brilla emetent un color roig intens i pur, essencial per a la reproducció exacta del color en la pantalla.",
+				curiositat: "L'europi reacciona fortament a la llum ultraviolada. Per això s'usa en les marques de seguretat invisibles dels bitllets d'Euro!",
+				stats: { conduct: 18, raresa: 91, resistencia: 30 },
+				clr: 'var(--clr-rara)'
+			},
+			itri: {
+				nom: "Itri",
+				simbol: "Y",
+				tipus: "TERRA RARA",
+				badgeClass: "badge-rara",
+				onEsTroba: "S'integra en els compostos emissors de llum de les pantalles de portàtils i en els materials ceràmics dels components tèrmics.",
+				funcio: "Funciona com un estabilitzador crucial del color i de la brillantor de la pantalla. Evita que la fidelitat de la imatge es degrade amb el pas del temps i l'ús intensiu.",
+				curiositat: "El seu nom ve d'Ytterby, una xicoteta mina en Suècia. Quatre elements de la taula periòdica deuen el seu nom a aquesta localitat!",
+				stats: { conduct: 25, raresa: 88, resistencia: 40 },
+				clr: '#60a5fa'
+			}
+		};
+
+		// ==========================================
+		// 3. CONFIGURACIÓ DE REGIONS DE L'ORDINADOR
+		// ==========================================
+		const components = [
+			{ id: 'pantalla', label: 'Monitor / Pantalla', x: 180, y: 150, w: 240, h: 160, minerals: ['indi', 'europi', 'itri'], imgSrc: 'pantalla.png', imgObj: null },
+			{ id: 'placa', label: 'Placa Base (Motherboard)', x: 30, y: 30, w: 140, h: 140, minerals: ['coure', 'tantal'], imgSrc: 'placa.png', imgObj: null },
+			{ id: 'cpu', label: 'Processador (CPU)', x: 250, y: 30, w: 90, h: 90, minerals: ['or', 'coure', 'plata'], imgSrc: 'cpu.png', imgObj: null },
+			{ id: 'ram', label: 'Memòria RAM', x: 30, y: 200, w: 130, h: 50, minerals: ['or'], imgSrc: 'ram.png', imgObj: null },
+			{ id: 'grafica', label: 'Targeta Gràfica (GPU)', x: 30, y: 360, w: 150, h: 80, minerals: ['coure', 'tantal'], imgSrc: 'grafica.png', imgObj: null },
+			{ id: 'discdur', label: 'Disc Dur (HDD/SSD)', x: 440, y: 350, w: 80, h: 110, minerals: ['neodimi'], imgSrc: 'discdur.png', imgObj: null },
+			{ id: 'font', label: 'Font d\'Alimentació / Ventilador', x: 410, y: 30, w: 150, h: 110, minerals: ['coure'], imgSrc: 'ventilador.png', imgObj: null }
+		];
+
+		// ==========================================
+		// 4. PREGUNTES DEL QÜESTIONARI
+		// ==========================================
+		const quizQuestions = [
+			{
+				question: "Quin d'aquests minerals actua com el 'sistema nerviós' de l'ordinador conduint l'electricitat a través dels circuits?",
+				choices: ["Or (Au)", "Coure (Cu)", "Europi (Eu)", "Neodimi (Nd)"],
+				answerIndex: 1,
+				explanation: "El Coure és excel·lent conductor de l'electricitat i s'utilitza en totes les pistes de les plaques electròniques."
+			},
+			{
+				question: "Per què s'utilitza Or (Au) als pins de la CPU i de la targeta gràfica?",
+				choices: ["Perquè és molt barat", "Perquè fa que l'ordinador pese menys", "Perquè no s'oxida mai i manté la connexió perfecta", "Perquè té un color groc brillant"],
+				answerIndex: 2,
+				explanation: "L'Or no s'oxida mai, garantint que el contacte elèctric entre els xips estiga lliure d'imperfeccions per sempre."
+			},
+			{
+				question: "Dins dels discos durs HDD o dels altaveus, quin element és indispensable per fer imants superpotents?",
+				choices: ["Plata (Ag)", "Neodimi (Nd)", "Tàntal (Ta)", "Itri (Y)"],
+				answerIndex: 1,
+				explanation: "El Neodimi crea els imants permanents més forts coneguts, claus per fer girar i moure els capçals dels discos durs."
+			},
+			{
+				question: "Quin metall és 100% transparent i conductor de l'electricitat, fet pel qual s'utilitza a les pantalles tàctils?",
+				choices: ["Indi (In)", "Coure (Cu)", "Or (Au)", "Tàntal (Ta)"],
+				answerIndex: 0,
+				explanation: "L'òxid d'Indi i estany (ITO) condueix l'electricitat i deixa passar la llum, perfecte per a les pantalles tàctils."
+			},
+			{
+				question: "Quin element de la taula periòdica té la conductivitat elèctrica i tèrmica més alta de totes, utilitzat en les soldadures i pastes tèrmiques d'alta gamma?",
+				choices: ["Coure (Cu)", "Or (Au)", "Plata (Ag)", "Europi (Eu)"],
+				answerIndex: 2,
+				explanation: "La Plata és el millor conductor absolut, perfecta per extreure ràpidament el calor dels processadors més potents."
+			},
+			{
+				question: "Quina terra rara rep un estímul elèctric i brilla d'un color roig intens i pur, fent possible que vegem colors espectaculars a la pantalla?",
+				choices: ["Europi (Eu)", "Indi (In)", "Tàntal (Ta)", "Or (Au)"],
+				answerIndex: 0,
+				explanation: "L'Europi s'utilitza com a dopant de fòsfors vermells als panells LED i OLED per la seua fidelitat cromàtica."
+			},
+			{
+				question: "Quin metall de gota molt petit i escàs s'encarrega d'emmagatzemar corrent i protegir les targetes gràfiques?",
+				choices: ["Neodimi (Nd)", "Tàntal (Ta)", "Plata (Ag)", "Coure (Cu)"],
+				answerIndex: 1,
+				explanation: "El Tàntal s'utilitza en petits condensadors que regulen i filtren el corrent, protegint els components d'alta precisió."
+			},
+			{
+				question: "Per què s'utilitza l'Itri (Y) en els monitors LED i OLED de l'ordinador?",
+				choices: ["Per a refredar la pantalla", "Com a metall transparent de contacte", "Per a protegir la pantalla de cops", "Per a estabilitzar els colors de la pantalla amb el pas dels anys"],
+				answerIndex: 3,
+				explanation: "L'Itri s'usa com a estabilitzador ceràmic i cromàtic per evitar que la fidelitat de la imatge de la pantalla es degrade amb l'ús."
+			}
+		];
+
+		// ==========================================
+		// 5. INICIALITZACIÓ DEL CANVAS I IMATGES
+		// ==========================================
+		const canvas = document.getElementById('computerCanvas');
+		const ctx = canvas.getContext('2d');
+		
+		let imagesLoaded = 0;
+		let totalImages = components.length;
+
+		components.forEach(comp => {
+			const img = new Image();
+			img.src = comp.imgSrc;
+			img.onload = () => {
+				imagesLoaded++;
+				comp.imgObj = img;
+			};
+			img.onerror = () => {
+				console.warn(`No s'ha pogut carregar la imatge: ${comp.imgSrc}. S'utilitzarà una representació vectorial didàctica.`);
+				imagesLoaded++; // Comptabilitzem igualment per a poder arrencar
+			};
+		});
+
+		// Estat general de l'aplicació
+		let activeRegion = null;
+		let selectedComponent = null;
+		let activeTab = 'scanner'; // 'scanner' o 'quiz'
+		let highlightedMineral = null; // mineral a ressaltar a tot l'ordinador
+		let pulseTimer = 0;
+		
+		// Coordinació de la línia làser d'escaneig
+		let laserY = 0;
+		let laserDirection = 1;
+		let laserSpeed = 2;
+
+		// Estat del qüestionari
+		let currentQuestionIdx = 0;
+		let score = 0;
+		let hasAnswered = false;
+
+		// ==========================================
+		// 6. RENDER DE CANVAS AMB ANIMACIONS
+		// ==========================================
+		function updateCanvasAnimations() {
+			pulseTimer += 0.05;
+			
+			// Netejar canvas
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			// 1. Dibuixar Fons Digital d'Escàner
+			drawHUDGrid();
+
+			// 2. Dibuixar components de l'ordinador
+			components.forEach(comp => {
+				const isHovered = activeRegion && activeRegion.id === comp.id;
+				const isSelected = selectedComponent && selectedComponent.id === comp.id;
+				const isHighlighted = highlightedMineral && comp.minerals.includes(highlightedMineral);
+
+				ctx.save();
+
+				// Afegeix un brillant intens si el component està seleccionat o ressaltat
+				if (isSelected) {
+					ctx.shadowBlur = 25;
+					ctx.shadowColor = "rgba(0, 240, 255, 0.4)";
+				} else if (isHighlighted) {
+					const pulseAlpha = 0.35 + 0.3 * Math.sin(pulseTimer * 3.5);
+					ctx.shadowBlur = 20;
+					ctx.shadowColor = `rgba(250, 204, 21, ${pulseAlpha})`;
+				} else if (isHovered) {
+					ctx.shadowBlur = 15;
+					ctx.shadowColor = "rgba(0, 240, 255, 0.25)";
+				}
+
+				// Dibuixar la imatge si està carregada, altrament pintar un dibuix vectorial didàctic
+				if (comp.imgObj && comp.imgObj.complete && comp.imgObj.naturalWidth !== 0) {
+					ctx.drawImage(comp.imgObj, comp.x, comp.y, comp.w, comp.h);
+				} else {
+					drawFallbackComponent(comp);
+				}
+				ctx.restore();
+
+				// Dibuixar marcs i guies segons estat
+				if (isSelected) {
+					// Marc cian intens de selecció
+					ctx.strokeStyle = varColor('--accent-cyan');
+					ctx.lineWidth = 3;
+					ctx.strokeRect(comp.x - 2, comp.y - 2, comp.w + 4, comp.h + 4);
+					
+					// Dibuixar retícula HUD del làser
+					drawScanningHUD(comp);
+				} else if (isHighlighted) {
+					// Pols d'or actiu per a elements seleccionats des del panell de minerals
+					const pulseAlpha = 0.4 + 0.4 * Math.sin(pulseTimer * 3.5);
+					ctx.strokeStyle = `rgba(250, 204, 21, ${pulseAlpha})`;
+					ctx.lineWidth = 3;
+					ctx.setLineDash([8, 4]);
+					ctx.strokeRect(comp.x - 3, comp.y - 3, comp.w + 6, comp.h + 6);
+					ctx.setLineDash([]); // Restablir línia contínua
+				} else if (isHovered) {
+					// Marc verd fluix
+					ctx.strokeStyle = "rgba(0, 240, 255, 0.5)";
+					ctx.lineWidth = 2;
+					ctx.strokeRect(comp.x, comp.y, comp.w, comp.h);
+				} else {
+					// Línies de referència discretes
+					ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+					ctx.lineWidth = 1;
+					ctx.strokeRect(comp.x, comp.y, comp.w, comp.h);
+				}
+			});
+
+			// Demanar següent frame (60 FPS)
+			requestAnimationFrame(updateCanvasAnimations);
+		}
+
+		// Utilitat per llegir variables de color de CSS a JS
+		function varColor(cssVar) {
+			return getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+		}
+
+		// Dibuixar Fons de Graella amb detalls radar
+		function drawHUDGrid() {
+			ctx.fillStyle = "#0c0e1b";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			// Graella de línies fines
+			ctx.strokeStyle = "rgba(0, 240, 255, 0.04)";
+			ctx.lineWidth = 1;
+			const gridSize = 40;
+			
+			for (let x = 0; x < canvas.width; x += gridSize) {
+				ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+			}
+			for (let y = 0; y < canvas.height; y += gridSize) {
+				ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+			}
+
+			// Cercle de radar concèntrics al mig
+			ctx.strokeStyle = "rgba(0, 240, 255, 0.03)";
+			ctx.lineWidth = 2;
+			ctx.beginPath(); ctx.arc(canvas.width / 2, canvas.height / 2, 120, 0, Math.PI * 2); ctx.stroke();
+			ctx.beginPath(); ctx.arc(canvas.width / 2, canvas.height / 2, 220, 0, Math.PI * 2); ctx.stroke();
+
+			// Línies en creu de referència
+			ctx.strokeStyle = "rgba(0, 240, 255, 0.05)";
+			ctx.lineWidth = 1;
+			ctx.beginPath(); ctx.moveTo(canvas.width / 2, 0); ctx.lineTo(canvas.width / 2, canvas.height); ctx.stroke();
+			ctx.beginPath(); ctx.moveTo(0, canvas.height / 2); ctx.lineTo(canvas.width, canvas.height / 2); ctx.stroke();
+		}
+
+		// Dibuix de contingència en cas que les imatges PNG fallen
+		function drawFallbackComponent(comp) {
+			ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
+			ctx.fillRect(comp.x, comp.y, comp.w, comp.h);
+
+			// Dibuixos vectorials didàctics
+			ctx.fillStyle = "rgba(0, 240, 255, 0.15)";
+			ctx.fillRect(comp.x + 10, comp.y + 10, comp.w - 20, comp.h - 20);
+
+			ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+			ctx.font = "bold 11px 'Orbitron'";
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			ctx.fillText(comp.label, comp.x + comp.w / 2, comp.y + comp.h / 2);
+		}
+
+		// Dibuixar la línia làser i detalls HUD sobre el component seleccionat
+		function drawScanningHUD(comp) {
+			// Calcular moviment de la línia làser
+			laserY += laserSpeed * laserDirection;
+			if (laserY > comp.h) {
+				laserY = comp.h;
+				laserDirection = -1;
+			} else if (laserY < 0) {
+				laserY = 0;
+				laserDirection = 1;
+			}
+
+			const currentY = comp.y + laserY;
+
+			// Línia làser amb gradient de lluminositat
+			const grad = ctx.createLinearGradient(comp.x, currentY - 6, comp.x, currentY + 6);
+			grad.addColorStop(0, 'rgba(0, 240, 255, 0)');
+			grad.addColorStop(0.5, 'rgba(0, 240, 255, 0.7)');
+			grad.addColorStop(1, 'rgba(0, 240, 255, 0)');
+
+			ctx.fillStyle = grad;
+			ctx.fillRect(comp.x - 4, currentY - 6, comp.w + 8, 12);
+
+			// Nucli prim del làser
+			ctx.strokeStyle = '#ffffff';
+			ctx.lineWidth = 2;
+			ctx.shadowBlur = 8;
+			ctx.shadowColor = '#00f0ff';
+			ctx.beginPath();
+			ctx.moveTo(comp.x - 6, currentY);
+			ctx.lineTo(comp.x + comp.w + 6, currentY);
+			ctx.stroke();
+			ctx.shadowBlur = 0; // desactivar ombres per a la resta de dibuixos
+
+			// Cantonades de retícula d'enfocament (Corner Brackets)
+			ctx.strokeStyle = varColor('--accent-cyan');
+			ctx.lineWidth = 2.5;
+			const len = 12;
+			const offset = 8;
+			const x = comp.x - offset;
+			const y = comp.y - offset;
+			const w = comp.w + (offset * 2);
+			const h = comp.h + (offset * 2);
+
+			// Top Left
+			ctx.beginPath(); ctx.moveTo(x + len, y); ctx.lineTo(x, y); ctx.lineTo(x, y + len); ctx.stroke();
+			// Top Right
+			ctx.beginPath(); ctx.moveTo(x + w - len, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + len); ctx.stroke();
+			// Bottom Left
+			ctx.beginPath(); ctx.moveTo(x, y + h - len); ctx.lineTo(x, y + h); ctx.lineTo(x + len, y + h); ctx.stroke();
+			// Bottom Right
+			ctx.beginPath(); ctx.moveTo(x + w - len, y + h); ctx.lineTo(x + w, y + h); ctx.lineTo(x + w, y + h - len); ctx.stroke();
+
+			// Text de coordinades flotant
+			ctx.fillStyle = "rgba(0, 240, 255, 0.85)";
+			ctx.font = "8px 'Orbitron'";
+			ctx.textAlign = "left";
+			ctx.fillText(`LOC: ${comp.x}px, ${comp.y}px`, comp.x, comp.y - 12);
+			ctx.textAlign = "right";
+			ctx.fillText(`SIZE: ${comp.w}x${comp.h}`, comp.x + comp.w, comp.y - 12);
+		}
+
+		// ==========================================
+		// 7. LÒGICA DE CONTROL DEL RATOLÍ (Canvas)
+		// ==========================================
+		function getMousePos(canvas, evt) {
+			const rect = canvas.getBoundingClientRect();
+			// Gestió de redimensionament del canvas per a coordenades exactes
+			return {
+				x: (evt.clientX - rect.left) * (canvas.width / rect.width),
+				y: (evt.clientY - rect.top) * (canvas.height / rect.height)
+			};
+		}
+
+		canvas.addEventListener('mousemove', (evt) => {
+			const pos = getMousePos(canvas, evt);
+			
+			// Actualitzar HUD de coordenades
+			document.getElementById('hudCoords').textContent = `X: ${Math.round(pos.x).toString().padStart(3, '0')} | Y: ${Math.round(pos.y).toString().padStart(3, '0')}`;
+
+			// Detectar si estem sobre algun component
+			let found = null;
+			for (let i = 0; i < components.length; i++) {
+				const c = components[i];
+				if (pos.x >= c.x && pos.x <= c.x + c.w && pos.y >= c.y && pos.y <= c.y + c.h) {
+					found = c;
+					break;
+				}
+			}
+
+			// Si canviem de component actiu (hover)
+			if (found !== activeRegion) {
+				activeRegion = found;
+				if (found) {
+					sounds.playHover();
+				}
+			}
+		});
+
+		canvas.addEventListener('click', () => {
+			if (activeRegion) {
+				selectComponent(activeRegion);
+			}
+		});
+
+		// ==========================================
+		// 8. INTERACCIÓ DE COMPONENTS I ELEMENTS
+		// ==========================================
+		function selectComponent(comp) {
+			selectedComponent = comp;
+			laserY = 0; // Reiniciar línia d'escaneig
+			
+			sounds.playScan();
+			
+			// Actualitzar barra d'estat de maquinari
+			const statusDot = document.getElementById('statusDot');
+			const statusText = document.getElementById('statusText');
+			statusDot.className = "status-dot scanning";
+			statusText.textContent = `ESCANEJANT: ${comp.label.toUpperCase()}`;
+			
+			setTimeout(() => {
+				statusDot.className = "status-dot";
+				statusText.textContent = `MOSTRANT DADES DE: ${comp.label.toUpperCase()}`;
+			}, 350);
+
+			// Canviar a la pestanya d'escàner per mostrar la info si no hi estàvem
+			switchTab('scanner');
+
+			// Construir i mostrar la informació dels minerals al panell dret
+			const welcomeScr = document.getElementById('scannerWelcome');
+			const detailsScr = document.getElementById('scannerDetails');
+			const titleLabel = document.getElementById('compLabel');
+			const container = document.getElementById('mineralsContainer');
+
+			welcomeScr.style.display = 'none';
+			detailsScr.style.display = 'block';
+			titleLabel.textContent = comp.label;
+			container.innerHTML = '';
+
+			comp.minerals.forEach((minKey) => {
+				const m = mineralsData[minKey];
+				if (!m) return;
+
+				const card = document.createElement('div');
+				card.className = 'mineral-card';
+				card.innerHTML = `
+					<div class="mineral-card-header">
+						<span class="mineral-badge ${m.badgeClass}">${m.tipus}</span>
+						<div class="mineral-title">
+							${m.nom} 
+							<span class="element-symbol" style="border-color:${m.clr}; color:${m.clr};">${m.simbol}</span>
+						</div>
+					</div>
+					
+					<div class="section-title"><span>📍</span> On s'amaga exactament?</div>
+					<div class="section-desc">${m.onEsTroba}</div>
+
+					<div class="section-title"><span>⚡</span> Quina és la seua superpotència?</div>
+					<div class="section-desc">${m.funcio}</div>
+
+					<!-- Barres d'Estadístiques RPG -->
+					<div class="stats-container">
+						<div class="stat-row">
+							<div class="stat-info">
+								<span>🔌 Conductivitat</span>
+								<span>${m.stats.conduct}%</span>
+							</div>
+							<div class="stat-bar-bg">
+								<div class="stat-bar-fill" style="width: ${m.stats.conduct}%; background: ${m.clr};"></div>
+							</div>
+						</div>
+						<div class="stat-row">
+							<div class="stat-info">
+								<span>💎 Raresa i Preu</span>
+								<span>${m.stats.raresa}%</span>
+							</div>
+							<div class="stat-bar-bg">
+								<div class="stat-bar-fill" style="width: ${m.stats.raresa}%; background: ${m.clr};"></div>
+							</div>
+						</div>
+						<div class="stat-row">
+							<div class="stat-info">
+								<span>🛡️ Resistència a l'Oxidació</span>
+								<span>${m.stats.resistencia}%</span>
+							</div>
+							<div class="stat-bar-bg">
+								<div class="stat-bar-fill" style="width: ${m.stats.resistencia}%; background: ${m.clr};"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="fun-fact-container">
+						<span class="fun-fact-icon">💡</span>
+						<div class="fun-fact-text"><strong>Sabies que?</strong> ${m.curiositat}</div>
+					</div>
+				`;
+				container.appendChild(card);
+			});
+
+			// Desseleccionar qualsevol element que estiga ressaltat des de la taula periòdica inferior
+			document.querySelectorAll('.periodic-card').forEach(c => c.classList.remove('active'));
+			highlightedMineral = null;
+		}
+
+		// Selecció des de la taula periòdica inferior
+		document.querySelectorAll('.periodic-grid .periodic-card').forEach(card => {
+			card.addEventListener('click', () => {
+				const minKey = card.getAttribute('data-mkey');
+				
+				// Activar estat actiu a la targeta
+				document.querySelectorAll('.periodic-grid .periodic-card').forEach(c => c.classList.remove('active'));
+				
+				if (highlightedMineral === minKey) {
+					// Desseleccionar si es fa clic de nou
+					highlightedMineral = null;
+					selectedComponent = null;
+					document.getElementById('statusText').textContent = "SISTEMA A PUNT";
+					document.getElementById('scannerWelcome').style.display = 'flex';
+					document.getElementById('scannerDetails').style.display = 'none';
+				} else {
+					// Seleccionar nou
+					highlightedMineral = minKey;
+					card.classList.add('active');
+					sounds.playScan();
+					
+					// Cercar el primer component que conté aquest mineral per obrir la seua info al panell lateral
+					const associatedComp = components.find(c => c.minerals.includes(minKey));
+					if (associatedComp) {
+						selectComponent(associatedComp);
+						// Forçar a mantenir ressaltat l'element global
+						highlightedMineral = minKey;
+						card.classList.add('active');
+					}
+					
+					document.getElementById('statusText').textContent = `CERCA ELEMENT: ${minKey.toUpperCase()}`;
+				}
+			});
+		});
+
+		// Botó d'autodiagnòstic (Inicia escaneig aleatori)
+		document.getElementById('btnAutoScan').addEventListener('click', () => {
+			const randomComp = components[Math.floor(Math.random() * components.length)];
+			selectComponent(randomComp);
+		});
+
+		// ==========================================
+		// 9. NAVEGACIÓ ENTRE PESTANYES
+		// ==========================================
+		const tabScanner = document.getElementById('tabScanner');
+		const tabQuiz = document.getElementById('tabQuiz');
+		const scannerView = document.getElementById('scannerView');
+		const quizView = document.getElementById('quizView');
+
+		function switchTab(tab) {
+			activeTab = tab;
+			sounds.playHover();
+			
+			if (tab === 'scanner') {
+				tabScanner.classList.add('active');
+				tabQuiz.classList.remove('active');
+				scannerView.style.display = 'flex';
+				quizView.style.display = 'none';
+			} else {
+				tabScanner.classList.remove('active');
+				tabQuiz.classList.add('active');
+				scannerView.style.display = 'none';
+				quizView.style.display = 'flex';
+				initQuiz();
+			}
+		}
+
+		tabScanner.addEventListener('click', () => switchTab('scanner'));
+		tabQuiz.addEventListener('click', () => switchTab('quiz'));
+
+		// ==========================================
+		// 10. JOC DE PREGUNTES (GAMIFICACIÓ)
+		// ==========================================
+		function initQuiz() {
+			currentQuestionIdx = 0;
+			score = 0;
+			hasAnswered = false;
+			updateXPBar();
+			showQuestion();
+		}
+
+		function showQuestion() {
+			hasAnswered = false;
+			const q = quizQuestions[currentQuestionIdx];
+			
+			document.getElementById('questionNum').textContent = `${currentQuestionIdx + 1}/${quizQuestions.length}`;
+			document.getElementById('quizScoreText').textContent = score;
+			document.getElementById('quizQuestion').textContent = q.question;
+
+			const choicesContainer = document.getElementById('quizChoices');
+			choicesContainer.innerHTML = '';
+
+			const bullets = ['A', 'B', 'C', 'D'];
+			q.choices.forEach((choice, idx) => {
+				const btn = document.createElement('button');
+				btn.className = 'choice-btn';
+				btn.innerHTML = `<span class="choice-bullet">${bullets[idx]}</span> ${choice}`;
+				
+				btn.addEventListener('click', () => handleChoiceSelection(idx, btn));
+				choicesContainer.appendChild(btn);
+			});
+
+			const feedback = document.getElementById('quizFeedback');
+			feedback.className = 'quiz-feedback';
+			feedback.innerHTML = '';
+			document.getElementById('btnNextQuestion').style.display = 'none';
+		}
+
+		function handleChoiceSelection(choiceIdx, selectedBtn) {
+			if (hasAnswered) return;
+			hasAnswered = true;
+
+			const q = quizQuestions[currentQuestionIdx];
+			const buttons = document.querySelectorAll('#quizChoices .choice-btn');
+			const feedback = document.getElementById('quizFeedback');
+			const nextBtn = document.getElementById('btnNextQuestion');
+
+			// Desactivar tots els botons
+			buttons.forEach(btn => btn.disabled = true);
+
+			if (choiceIdx === q.answerIndex) {
+				// Resposta correcta
+				selectedBtn.classList.add('correct');
+				feedback.className = 'quiz-feedback show';
+				feedback.style.color = '#10b981';
+				feedback.innerHTML = `💚 MOLT BÉ! 🎉<br><span style="font-size:0.75rem; font-weight:normal; color:#d1fae5;">${q.explanation}</span>`;
+				
+				score++;
+				sounds.playCorrect();
+				updateXPBar();
+			} else {
+				// Resposta incorrecta
+				selectedBtn.classList.add('incorrect');
+				// Mostrar la correcta també en verd clar
+				buttons[q.answerIndex].classList.add('correct');
+				feedback.className = 'quiz-feedback show';
+				feedback.style.color = '#ef4444';
+				feedback.innerHTML = `😢 ERROR. La correcta era la ${['A','B','C','D'][q.answerIndex]}.<br><span style="font-size:0.75rem; font-weight:normal; color:#fee2e2;">${q.explanation}</span>`;
+				
+				sounds.playIncorrect();
+			}
+
+			// Actualitzar puntuació a la capçalera
+			document.getElementById('quizScoreText').textContent = score;
+
+			// Mostrar botó de següent
+			if (currentQuestionIdx < quizQuestions.length - 1) {
+				nextBtn.textContent = "Següent Pregunta ➡️";
+				nextBtn.style.display = 'block';
+			} else {
+				nextBtn.textContent = "Veure Resultats Final 🎓";
+				nextBtn.style.display = 'block';
+			}
+		}
+
+		// Botó per canviar de pregunta o finalitzar
+		document.getElementById('btnNextQuestion').addEventListener('click', () => {
+			sounds.playHover();
+			if (currentQuestionIdx < quizQuestions.length - 1) {
+				currentQuestionIdx++;
+				showQuestion();
+			} else {
+				showFinalResults();
+			}
+		});
+
+		// Mostra la pantalla de diplomes al finalitzar
+		function showFinalResults() {
+			const quizContainer = document.getElementById('quizChoices');
+			const qBox = document.getElementById('quizQuestion');
+			const nextBtn = document.getElementById('btnNextQuestion');
+			const feedback = document.getElementById('quizFeedback');
+			
+			feedback.className = 'quiz-feedback'; // netejar
+			nextBtn.style.display = 'none';
+			
+			let rank = "";
+			let rankText = "";
+			let rankEmoji = "";
+
+			if (score <= 3) {
+				rank = "APRENENT DE MINER 🔍";
+				rankText = "Has fet els primers passos! Torna a escanejar components per a aprendre més sobre els secrets de la matèria.";
+				rankEmoji = "🕵️‍♂️";
+			} else if (score <= 6) {
+				rank = "GEÒLEG TECNOLÒGIC 🛠️";
+				rankText = "Molt bé! Coneixes perfectament les utilitats de molts dels metalls ocults als ordinadors. Gairebé un expert!";
+				rankEmoji = "👷";
+			} else {
+				rank = "SUPERCIENTÍFIC/A CUÀNTIC/A 👑🔬";
+				rankText = "Increïble! Resposta perfecta. Ets capaç d'identificar qualsevol mineral tecnològic i saps exactament per a què serveix. Felicitats!";
+				rankEmoji = "🧙‍♂️✨";
+			}
+
+			// Actualitzar també indicador global de nivell a dalt
+			document.getElementById('rankLabel').textContent = rank.split(" ")[0] + " " + rankEmoji;
+
+			qBox.innerHTML = `<span style="font-size: 2.2rem;">${rankEmoji}</span><h2 style="font-family:'Orbitron'; color:var(--accent-gold); margin: 8px 0;">REPTE FINALITZAT</h2>`;
+			
+			quizContainer.innerHTML = `
+				<div class="quiz-results-screen">
+					<div class="rank-badge">${rank}</div>
+					<p style="font-size:0.85rem; line-height:1.5; color:var(--text-muted); margin-bottom: 20px;">
+						Has encertat <strong>${score} de ${quizQuestions.length}</strong> preguntes.<br><br>
+						${rankText}
+					</p>
+					<button class="btn-start-scan" id="btnRestartQuiz">TORNAR A JUGAR</button>
+				</div>
+			`;
+
+			document.getElementById('btnRestartQuiz').addEventListener('click', () => {
+				sounds.playPowerUp();
+				initQuiz();
+			});
+		}
+
+		// Barra de progrés superior d'XP
+		function updateXPBar() {
+			const xpPercent = (score / quizQuestions.length) * 100;
+			document.getElementById('xpBar').style.width = `${xpPercent}%`;
+			document.getElementById('xpText').textContent = `${score}/${quizQuestions.length}`;
+		}
+
+		// ==========================================
+		// 11. ENGEGADA DE L'APLICACIÓ (Startup)
+		// ==========================================
+		
+		// Iniciar loop d'animació del canvas
+		updateCanvasAnimations();
+
+		// Activar so en el primer clic del document (Requisit dels navegadors)
+		document.body.addEventListener('click', () => {
+			sounds.init();
+		}, { once: true });
+
+		// Efecte sonor en obrir la pàgina
+		setTimeout(() => {
+			sounds.playPowerUp();
+		}, 800);
+	</script>
+</body>
+
+</html>
